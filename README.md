@@ -9,7 +9,7 @@ Install via **Package Control**: `Accent Letters`.
 Or clone into your `Packages` directory:
 
 ```bash
-git clone https://github.com/<your-username>/accent_letters.git "$HOME/AppData/Roaming/Sublime Text/Packages/AccentLetters"
+git clone https://github.com/CJayM/accent_letters.git "$HOME/AppData/Roaming/Sublime Text/Packages/AccentLetters"
 ```
 
 ## Usage
