@@ -2,26 +2,31 @@ import sublime
 import sublime_plugin
 
 
-CHANGED_LETTERS = "аеиоыэюяу"
-ACCENTED_LETTERS = "а́е́и́о́ы́э́ю́я́у́"
+COMBINING_ACUTE = "\u0301"
+VOWELS = set("аеиоыэюяуАЕИОЫЭЮЯУ")
+
 
 class AccentLetterCommand(sublime_plugin.TextCommand):
-	def run(self, edit):
-
-
-				
-		for region in self.view.sel():
-			if not region.empty():
-				s = self.view.substr(region)
-				res = []
-				for letter in s:
-					lowered = s.lower()
-					pos = CHANGED_LETTERS.index(s.lower())
-					if pos >=0:
-						res.extend(ACCENTED_LETTERS[pos*2:pos*2+2])
-					else:
-						res.append(lowered)
-				
-
-
-				self.view.replace(edit, region, "".join(res))
+    def run(self, edit):
+        for region in self.view.sel():
+            if region.empty():
+                continue
+            s = self.view.substr(region)
+            result = []
+            i = 0
+            while i < len(s):
+                ch = s[i]
+                if ch in VOWELS:
+                    next_ch = s[i + 1] if i + 1 < len(s) else ""
+                    if next_ch == COMBINING_ACUTE:
+                        result.append(ch)
+                        i += 2
+                    else:
+                        result.append(ch + COMBINING_ACUTE)
+                        i += 1
+                elif ch == COMBINING_ACUTE:
+                    i += 1
+                else:
+                    result.append(ch)
+                    i += 1
+            self.view.replace(edit, region, "".join(result))
